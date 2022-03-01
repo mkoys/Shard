@@ -26,3 +26,16 @@
 - [x] Basic Router
 - [x] Initialize Git
 - [x] Create Github repozitory
+- [x] Comment out code
+- [ ] Auth module
+    * [ ] Register
+        - [x] Create api point
+        - [x] Use module
+        - [x] Create class
+        - [x] Get data from request
+        - [x] Check request data type
+        - [ ] Check data with rules
+        - [ ] Create user
+        - [ ] Add user to database
+        - [ ] Respond
+    * [ ] Login
