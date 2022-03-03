@@ -34,7 +34,7 @@
         - [x] Create class
         - [x] Get data from request
         - [x] Check request data type
-        - [ ] Check data with rules
+        - [x] Check data with rules
         - [ ] Create user
         - [ ] Add user to database
         - [ ] Respond

@@ -18,6 +18,7 @@ router.post("/register", (req, res) => {
     // Check data type for registration
     register.checkType(data);
 
+    register.checkData(data);
 });
 
 // Export router
