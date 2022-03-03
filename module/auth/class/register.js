@@ -1,5 +1,7 @@
 const settings = require("../../../settings.js");
 
+const bcrypt = require("bcrypt");
+
 module.exports = class Register {
     constructor() {
         this.rules = {
@@ -90,5 +92,23 @@ module.exports = class Register {
         if(result.error) {
             throw new Error(`400: ${result.messages}`)
         }
+    }
+
+    // Creates user from data
+    createUser(data) {
+        // Deconstruct data
+        const {username, email, password} = data;
+
+        // Hash password
+        const secret = bcrypt.hashSync(password, settings.auth.saltRound);
+
+        // Create new user from data
+        const user = {
+            username,
+            email,
+            password: secret
+        }
+
+        return user;
     }
 }

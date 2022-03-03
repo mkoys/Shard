@@ -10,6 +10,8 @@
 - Cors - Cross Origin Request Headers
 - Helmet - Security
 - Morgan - Small HTTP logger
+- Bcrypt - Password hashing
+- MongoDB - Document based database
 
 
 **Development**

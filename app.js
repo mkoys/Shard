@@ -16,6 +16,12 @@ const morgan = require("morgan");
 // Import router
 const Router = require("./router.js");
 
+// Import database
+const database = require("./database.js");
+
+// Initialize database
+database.init(settngs.databaseUrl, "guama");
+
 // Create HTTP, Express, Socket.io server 
 const app = express();
 const server = http.createServer(app);
@@ -28,7 +34,7 @@ const port = settngs.port || "8000";
 const router = new Router();
 
 // Add modules to applicaiton
-router.addRoute("./module/auth/main.js", "/auth");
+router.addRoute("./module/auth/auth.js", "/auth");
 
 // Use Express middleware
 app.use(express.json());

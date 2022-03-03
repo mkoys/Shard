@@ -18,7 +18,12 @@ router.post("/register", (req, res) => {
     // Check data type for registration
     register.checkType(data);
 
+    // Checks data by rules
     register.checkData(data);
+
+    const newUser = register.createUser(data);
+
+    res.json(newUser);
 });
 
 // Export router
