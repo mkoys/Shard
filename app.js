@@ -17,15 +17,15 @@ const morgan = require("morgan");
 const Router = require("./router.js");
 
 // Import database
-const database = require("./database.js");
-
-// Initialize database
-database.init(settngs.databaseUrl, "guama");
+const database = require("./connection.js");
 
 // Create HTTP, Express, Socket.io server 
 const app = express();
 const server = http.createServer(app);
 const io = new socketServer(server);
+
+// Initialize database
+database.init(settngs.databaseUrl, "shard");
 
 // Port constant
 const port = settngs.port || "8000";

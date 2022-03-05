@@ -1,6 +1,8 @@
-const settings = require("../../../settings.js");
+const settings = require("../../settings.js");
 
 const bcrypt = require("bcrypt");
+
+const connection = require("../../connection.js");
 
 module.exports = class Register {
     constructor() {
@@ -28,12 +30,12 @@ module.exports = class Register {
         }
 
         // Check if all input's are in data
-        if(!data.username || !data.email || !data.password) {
+        if (!data.username || !data.email || !data.password) {
             throw new Error("400: Missing input");
         }
 
         // Check types of data if not right throw error
-        if(typeof data.password !== "string" || typeof data.email !== "string" || typeof data.username !== "string") {
+        if (typeof data.password !== "string" || typeof data.email !== "string" || typeof data.username !== "string") {
             throw new Error("400: Invalid input type");
         }
     }
@@ -47,65 +49,93 @@ module.exports = class Register {
         }
 
         // Check minimum username lenght
-        if(data.username.length < this.rules.usernameMinLength) {
+        if (data.username.length < this.rules.usernameMinLength) {
             result.error = true;
             result.messages.push("Username too short");
         }
 
         // Check maximum username lenght
-        if(data.username.length > this.rules.usernameMaxLength) {
+        if (data.username.length > this.rules.usernameMaxLength) {
             result.error = true;
             result.messages.push("Username too long");
         }
 
         // Check if email is valid
-        if(!this.rules.emailTest.test(data.email)) {
+        if (!this.rules.emailTest.test(data.email)) {
             result.error = true;
             result.messages.push("Email is not valid");
         }
 
         // Check minimum password lenght
-        if(data.password.length < this.rules.passwordMinLength) {
+        if (data.password.length < this.rules.passwordMinLength) {
             result.error = true;
             result.messages.push("Password too short");
         }
 
         // Check if password has a capital letter
-        if(!this.rules.passwordCapitalTest.test(data.password) && settings.auth.passwordCapital) {
+        if (!this.rules.passwordCapitalTest.test(data.password) && settings.auth.passwordCapital) {
             result.error = true;
             result.messages.push("Password must have at least one capital letter");
         }
 
         // Check if password contains diget
-        if(!this.rules.passwordDigitTest.test(data.password) && settings.auth.passwordDigit) {
+        if (!this.rules.passwordDigitTest.test(data.password) && settings.auth.passwordDigit) {
             result.error = true;
             result.messages.push("Password must contain at least one number");
         }
 
         // Chceck if password has special character
-        if(!this.rules.passwordSpecialTest.test(data.password) && settings.auth.passwordSpecialCharacter) {
+        if (!this.rules.passwordSpecialTest.test(data.password) && settings.auth.passwordSpecialCharacter) {
             result.error = true;
             result.messages.push("Password must contain at least one special character");
         }
 
         // If we have found error throw error
-        if(result.error) {
+        if (result.error) {
             throw new Error(`400: ${result.messages}`)
+        }
+    }
+
+    async duplicate(data) {
+        // Get database object and set colletion to users
+        const database = connection.get();
+        const users = database.collection("users");
+
+        // Check for duplicate users eather by username of by email
+        const duplicateUser = await users.findOne({ 
+            $or: [
+                { username: data.username.toLowerCase() }, 
+                { email: data.email.toLowerCase() }
+            ] 
+        });
+
+        // If we have dplicate user throw error
+        if (duplicateUser) {
+            if (
+                duplicateUser.username === data.username.toLowerCase() &&
+                duplicateUser.email === data.email.toLowerCase()
+            ) {
+                throw new Error("Username and already in use");
+            } else if (duplicateUser.username === data.username.toLowerCase()) {
+                throw new Error("Username already in use");
+            } else {
+                throw new Error("Email already in use");
+            }
         }
     }
 
     // Creates user from data
     createUser(data) {
         // Deconstruct data
-        const {username, email, password} = data;
+        const { username, email, password } = data;
 
         // Hash password
         const secret = bcrypt.hashSync(password, settings.auth.saltRound);
 
         // Create new user from data
         const user = {
-            username,
-            email,
+            username: username.toLowerCase(),
+            email: email.toLowerCase(),
             password: secret
         }
 

@@ -20,7 +20,7 @@ module.exports = {
         console.log("Connected to database");
 
         // Get database by name
-        const db = client.db(settings.dbName);
+        const db = client.db(settings.databaseName);
 
         // Set it to database variable
         database = db;
