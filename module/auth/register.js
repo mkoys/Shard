@@ -6,6 +6,7 @@ const connection = require("../../connection.js");
 
 module.exports = class Register {
     constructor() {
+        this.users = connection.get().collection("users");
         this.rules = {
             usernameMinLength: settings.auth.usernameMinLength || 2,
             usernameMaxLength: settings.auth.usernameMaxLength || 10,
@@ -19,6 +20,7 @@ module.exports = class Register {
 
     // Checks type of input
     checkType(data) {
+
         // Check if any data
         if (!data || typeof data !== "object") {
             throw new Error("400: Invalid input");
@@ -97,20 +99,17 @@ module.exports = class Register {
     }
 
     async duplicate(data) {
-        // Get database object and set colletion to users
-        const database = connection.get();
-        const users = database.collection("users");
-
         // Check for duplicate users eather by username of by email
-        const duplicateUser = await users.findOne({ 
+        const duplicateUser = await this.users.findOne({
             $or: [
-                { username: data.username.toLowerCase() }, 
+                { username: data.username.toLowerCase() },
                 { email: data.email.toLowerCase() }
-            ] 
+            ]
         });
 
         // If we have dplicate user throw error
         if (duplicateUser) {
+            console.log(duplicateUser);
             if (
                 duplicateUser.username === data.username.toLowerCase() &&
                 duplicateUser.email === data.email.toLowerCase()
@@ -125,7 +124,10 @@ module.exports = class Register {
     }
 
     // Creates user from data
-    createUser(data) {
+    async createUser(data) {
+        // Get id from all users in database plus one
+        const id = (await this.users.count()) + 1;
+
         // Deconstruct data
         const { username, email, password } = data;
 
@@ -134,11 +136,16 @@ module.exports = class Register {
 
         // Create new user from data
         const user = {
+            id: id,
             username: username.toLowerCase(),
             email: email.toLowerCase(),
             password: secret
         }
 
         return user;
+    }
+
+    saveUser(user) {
+        this.users.insertOne(user);
     }
 }

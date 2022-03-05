@@ -39,6 +39,9 @@
         - [x] Check data with rules
         - [x] Check for user duplication
         - [x] Create user
-        - [ ] Add user to database
-        - [ ] Respond
+        - [x] Add user to database
+        - [x] Respond
+        - [ ] Remaster Rules module
+        - [ ] Error Handling
+        - [ ] Proposition
     * [ ] Login

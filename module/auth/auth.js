@@ -8,7 +8,7 @@ const Register = require("./register.js");
 const router = express.Router();
 
 // Register
-router.post("/register", async (req, res) => {
+router.post("/register", async (req, res, next) => {
     // Create register class
     const register = new Register();
 
@@ -25,7 +25,10 @@ router.post("/register", async (req, res) => {
     await register.duplicate(data);
 
     // Create new user from provided data
-    const newUser = register.createUser(data);
+    const newUser = await register.createUser(data);
+
+    // Save user to database
+    register.saveUser(newUser);
 
     // Return new user
     res.json(newUser);
