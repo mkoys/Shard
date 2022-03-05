@@ -37,7 +37,8 @@
         - [x] Get data from request
         - [x] Check request data type
         - [x] Check data with rules
-        - [ ] Create user
+        - [x] Check for user duplication
+        - [x] Create user
         - [ ] Add user to database
         - [ ] Respond
     * [ ] Login
