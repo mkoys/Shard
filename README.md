@@ -44,3 +44,15 @@
         - [x] Error Handling
         - [x] Proposition
     * [ ] Login
+        - [x] Create api point
+        - [x] Use module
+        - [x] Create Class
+        - [x] Get data from request
+        - [x] Check request data type
+        - [x] Compare user to database
+        - [x] Compare password to hash
+        - [x] Error handling
+        - [x] Respond
+        - [ ] Create Session
+- [ ] Sessions
+
