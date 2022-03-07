@@ -147,7 +147,7 @@ module.exports = class Register {
 
         // Create new user from data
         const user = {
-            id: id,
+            _id: id,
             username: username.toLowerCase(),
             email: email.toLowerCase(),
             password: secret
@@ -158,5 +158,41 @@ module.exports = class Register {
 
     saveUser(user) {
         this.users.insertOne(user);
+    }
+
+    // Register new user
+    async user(data, respond, error) {
+        // Check data type for registration
+        const typeResult = this.checkType(data);
+
+        // Check if typeCheck had any errors
+        if (typeResult) {
+            return error("Invalid request")
+        }
+
+        // Checks data by rules
+        const checkResult = this.checkData(data);
+
+        // Check if dataCheck had any errors
+        if (checkResult.error) {
+            return error(checkResult.messages);
+        }
+
+        // Check for duplicate user async
+        const duplicateResult = await this.duplicate(data);
+
+        // Check if duplicateCheck had any errors
+        if (duplicateResult.error) {
+            return error(duplicateResult.messages);
+        }
+
+        // Create new user from provided data
+        const newUser = await this.createUser(data);
+
+        // Save user to database
+        this.saveUser(newUser);
+
+        // Return new user
+        respond.json(newUser);
     }
 }
