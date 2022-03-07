@@ -30,7 +30,7 @@
 - [x] Create Github repozitory
 - [x] Comment out code
 - [ ] Auth module
-    * [ ] Register
+    * [x] Register
         - [x] Create api point
         - [x] Use module
         - [x] Create class
@@ -41,7 +41,6 @@
         - [x] Create user
         - [x] Add user to database
         - [x] Respond
-        - [ ] Remaster Rules module
-        - [ ] Error Handling
-        - [ ] Proposition
+        - [x] Error Handling
+        - [x] Proposition
     * [ ] Login

@@ -23,23 +23,25 @@ module.exports = class Register {
 
         // Check if any data
         if (!data || typeof data !== "object") {
-            throw new Error("400: Invalid input");
+            return 1;
         }
 
         // Check if data aren't empty
         if (Object.keys(data).length == 0) {
-            throw new Error("400: Invalid input");
+            return 1;
         }
 
         // Check if all input's are in data
         if (!data.username || !data.email || !data.password) {
-            throw new Error("400: Missing input");
+            return 1;
         }
 
         // Check types of data if not right throw error
         if (typeof data.password !== "string" || typeof data.email !== "string" || typeof data.username !== "string") {
-            throw new Error("400: Invalid input type");
+            return 1;
         }
+
+        return 0;
     }
 
     // Check input data by rules
@@ -92,13 +94,17 @@ module.exports = class Register {
             result.messages.push("Password must contain at least one special character");
         }
 
-        // If we have found error throw error
-        if (result.error) {
-            throw new Error(`400: ${result.messages}`)
-        }
+        // Return result
+        return result;
     }
 
     async duplicate(data) {
+        // Result variable
+        let result = {
+            error: false,
+            messages: []
+        }
+
         // Check for duplicate users eather by username of by email
         const duplicateUser = await this.users.findOne({
             $or: [
@@ -109,18 +115,23 @@ module.exports = class Register {
 
         // If we have dplicate user throw error
         if (duplicateUser) {
-            console.log(duplicateUser);
             if (
                 duplicateUser.username === data.username.toLowerCase() &&
                 duplicateUser.email === data.email.toLowerCase()
             ) {
-                throw new Error("Username and already in use");
+                result.error = true;
+                result.messages.push("Username and Email already in use");
             } else if (duplicateUser.username === data.username.toLowerCase()) {
-                throw new Error("Username already in use");
+                result.error = true;
+                result.messages.push("Username already in use");
             } else {
-                throw new Error("Email already in use");
+                result.error = true;
+                result.messages.push("Email already in use");
             }
         }
+
+        // Return result
+        return result;
     }
 
     // Creates user from data

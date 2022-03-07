@@ -7,22 +7,37 @@ const Register = require("./register.js");
 // Express router
 const router = express.Router();
 
+// Create register class
+const register = new Register();
+
 // Register
 router.post("/register", async (req, res, next) => {
-    // Create register class
-    const register = new Register();
-
     // Get data from request
     const data = req.body;
 
     // Check data type for registration
-    register.checkType(data);
+    const typeResult = register.checkType(data);
+
+    // Check if typeCheck had any errors
+    if (typeResult) {
+        return next("Invalid request")
+    }
 
     // Checks data by rules
-    register.checkData(data);
+    const checkResult = register.checkData(data);
+
+    // Check if dataCheck had any errors
+    if (checkResult.error) {
+        return next(checkResult.messages);
+    }
 
     // Check for duplicate user async
-    await register.duplicate(data);
+    const duplicateResult = await register.duplicate(data);
+
+    // Check if duplicateCheck had any errors
+    if (duplicateResult.error) {
+        return next(duplicateResult.messages);
+    }
 
     // Create new user from provided data
     const newUser = await register.createUser(data);
