@@ -167,7 +167,7 @@ module.exports = class Register {
 
         // Check if typeCheck had any errors
         if (typeResult) {
-            return error("Invalid request")
+            return error("Invalid request");
         }
 
         // Checks data by rules
@@ -192,7 +192,8 @@ module.exports = class Register {
         // Save user to database
         this.saveUser(newUser);
 
-        // Return new user
-        respond.json(newUser);
+        // Respond and return 0
+        respond.sendStatus(200);
+        return 0;
     }
 }
