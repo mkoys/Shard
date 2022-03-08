@@ -1,8 +1,8 @@
-const settings = require("../../settings.js");
-
 const bcrypt = require("bcrypt");
 
 const connection = require("../../connection.js");
+
+const session = require("../../core/Session.js")();
 
 module.exports = class Login {
     constructor() {
@@ -61,7 +61,20 @@ module.exports = class Login {
     }
 
     // Find user in database and compare password hash
-    async compare(data) {
+    compare(data, user) {
+        // Copare password hash to password string
+        const passwordCompare = bcrypt.compareSync(data.password, user.password);
+
+        // If compare failed error
+        if (!passwordCompare) {
+            return 1;
+        }
+
+        // No error return 0
+        return 0;
+    }
+
+    async findUser(data) {
         // Variable to store found user
         let foundUser;
 
@@ -74,19 +87,11 @@ module.exports = class Login {
 
         // If we have found no user error
         if (!foundUser) {
-            return 1;
+            return 0;
         }
 
-        // Copare password hash to password string
-        const passwordCompare = bcrypt.compareSync(data.password, foundUser.password);
-
-        // If compare failed error
-        if(!passwordCompare) {
-            return 1;
-        }
-
-        // No error return 0
-        return 0;
+        // Return found users data
+        return foundUser;
     }
 
     async user(data, respond, error) {
@@ -98,16 +103,27 @@ module.exports = class Login {
             return error("Invalid request");
         }
 
+        // Find user from data
+        const user = await this.findUser(data);
+
+        // If no user found error
+        if(!user) {
+            return error("Invalid credentials");
+        }
+
         // Login set user
-        const compareResult = await this.compare(data);
+        const compareResult = await this.compare(data, user);
 
         // Check if compareCheck had any errors
         if (compareResult) {
             return error("Invalid credentials");
         }
 
-        // Respond and return 0
-        respond.sendStatus(200);
+        // Create user and save his token
+        const token = session.create(user);
+
+        // Respond with token and return 0
+        respond.json({token});
         return 0;
     }
 }

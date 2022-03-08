@@ -10,5 +10,8 @@ module.exports = {
         passwordDigit: true, // Enable one diget in password
         passwordSpecialCharacter: false, // Enable one special character in password
         saltRound: 5, // Password hasing number
+    },
+    session: {
+        tokenLength: 5,
     }
 }

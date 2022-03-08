@@ -12,6 +12,7 @@
 - Morgan - Small HTTP logger
 - Bcrypt - Password hashing
 - MongoDB - Document based database
+- NanoID - Small ID generator
 
 
 **Development**
@@ -55,4 +56,9 @@
         - [x] Respond
         - [ ] Create Session
 - [ ] Sessions
+    - [x] Create session
+    - [ ] Add Socket to session
+    - [ ] Session settings
+    - [ ] Remove Socket from session
+    - [ ] Destroy session
 

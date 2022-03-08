@@ -48,7 +48,7 @@ database.init(settngs.databaseUrl, "shard").then(() => {
 
     // Error Handler
     app.use((err, req, res, next) => {
-        res.send(err)
+        res.send(err);
     });
 
     // Hello world route
