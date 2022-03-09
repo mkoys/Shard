@@ -58,7 +58,7 @@
 - [ ] Sessions
     - [x] Create session
     - [ ] Add Socket to session
-    - [ ] Session settings
+    - [x] Session settings
     - [ ] Remove Socket from session
     - [ ] Destroy session
 

@@ -19,10 +19,13 @@ const Router = require("./router.js");
 // Import database
 const database = require("./connection.js");
 
+const {session} = require("./class/controller.js");
+
+const socketMiddleware = require("./middleware/socket.js");
+
 // UGLY CHANGE IT
 // Initialize database then continue
 database.init(settngs.databaseUrl, "shard").then(() => {
-
     // Create HTTP, Express, Socket.io server 
     const app = express();
     const server = http.createServer(app);
@@ -55,6 +58,11 @@ database.init(settngs.databaseUrl, "shard").then(() => {
     app.get("/", (req, res) => {
         res.json({ message: "Hello shard!" });
     });
+
+
+    io.use(socketMiddleware.auth);
+    io.use(socketMiddleware.connect);
+    io.use(socketMiddleware.diconnect);
 
     // HTTP, Socket.io, Express listen on port
     server.listen(port, () => console.log(`Running on http://localhost:${port}`));

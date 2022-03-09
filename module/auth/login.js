@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 
 const connection = require("../../connection.js");
 
-const session = require("../../core/Session.js")();
+const { session } = require("../../class/controller.js");
 
 module.exports = class Login {
     constructor() {
