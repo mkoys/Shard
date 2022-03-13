@@ -44,7 +44,7 @@
         - [x] Respond
         - [x] Error Handling
         - [x] Proposition
-    * [ ] Login
+    * [x] Login
         - [x] Create api point
         - [x] Use module
         - [x] Create Class
@@ -54,11 +54,11 @@
         - [x] Compare password to hash
         - [x] Error handling
         - [x] Respond
-        - [ ] Create Session
+        - [x] Create Session
 - [ ] Sessions
     - [x] Create session
-    - [ ] Add Socket to session
+    - [x] Add Socket to session
     - [x] Session settings
-    - [ ] Remove Socket from session
+    - [x] Remove Socket from session
     - [ ] Destroy session
 

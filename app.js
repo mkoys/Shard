@@ -19,8 +19,10 @@ const Router = require("./router.js");
 // Import database
 const database = require("./connection.js");
 
-const {session} = require("./class/controller.js");
+// Import session controller
+const { session } = require("./class/controller.js");
 
+// Import middleware
 const socketMiddleware = require("./middleware/socket.js");
 
 // UGLY CHANGE IT
@@ -41,28 +43,24 @@ database.init(settngs.databaseUrl, "shard").then(() => {
     router.addRoute("./module/auth/auth.js", "/auth");
 
     // Use Express middleware
-    app.use(express.json());
-    app.use(cors());
-    app.use(helmet());
-    app.use(morgan("tiny"));
+    app.use(express.static("client")); // Provide our client
+    app.use(express.json()); // Use JSON data
+    app.use(cors()); // Cross resource origin headers
+    app.use(helmet()); // Security
+    app.use(morgan("tiny")); // Small http logger
 
     // User our router
-    app.use("/", router.app);
+    app.use("/api", router.app);
 
     // Error Handler
     app.use((err, req, res, next) => {
         res.send(err);
     });
 
-    // Hello world route
-    app.get("/", (req, res) => {
-        res.json({ message: "Hello shard!" });
-    });
-
-
-    io.use(socketMiddleware.auth);
-    io.use(socketMiddleware.connect);
-    io.use(socketMiddleware.diconnect);
+    // Use socket middleware
+    io.use(socketMiddleware.auth); // Authentification check
+    io.use(socketMiddleware.connect); // Append socket to session
+    io.use(socketMiddleware.diconnect); // Remove socket from session
 
     // HTTP, Socket.io, Express listen on port
     server.listen(port, () => console.log(`Running on http://localhost:${port}`));
