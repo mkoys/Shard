@@ -113,10 +113,7 @@
 <body>
     <div class="box">
         <h2>Login</h4>
-            <div class="input">
-                <label>username or email</label>
-                <input type="text">
-            </div>
+            <shard-input input="text" text="label:username or email"></shard-input>
             <div class="input">
                 <label>password</label>
                 <input type="password">
@@ -128,3 +125,11 @@
             </div>
     </div>
 </body>
+
+<script>
+    import Importer from "../core/importer.js";
+
+    const importer = new Importer();
+
+    importer.import("input");
+</script>

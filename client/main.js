@@ -1,11 +1,3 @@
-import Importer from "./core/importer.js";
+import Viewer from "./core/viewer.js";
 
-const importer = new Importer(document);
-
-importer.import("input");
-
-const setTest = importer.state("test", Math.random());
-
-setInterval(() => {
-    setTest(Math.random());
-})
+Viewer.load("login")

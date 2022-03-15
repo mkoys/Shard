@@ -40,6 +40,7 @@ export default class Importer {
             const moduleBody = moduleDocument.body.children[0];
             const moduleScript = moduleDocument.querySelector("script");
 
+
             if (moduleStyle) {
                 document.head.appendChild(moduleStyle);
             }
@@ -47,14 +48,27 @@ export default class Importer {
             const allTemplates = document.querySelectorAll(`shard-${module}`);
 
             allTemplates.forEach(element => {
+                const allSetAtr = moduleBody.querySelectorAll("[type]");
+
+                allSetAtr.forEach(atr => {
+                    const val = atr.getAttribute("set");
+
+                    const realVal = val.split(":");
+
+                    atr.setAttribute(realVal[0], element.getAttribute(realVal[1]));
+                });
+
                 element.root = element;
                 element.outerHTML = moduleBody.outerHTML;
 
-                for (let index = 0; index < element.attributes.length; index++) {
-                    const currentText = document.querySelector(`text#${element.attributes[index].name}`);
+                const allText = element.getAttribute("text");
+                const group = allText.split(",");
+                group.forEach(textGroup => {
+                    const text = textGroup.split(":");
+                    const currentText = document.querySelector(`text#${text[0]}`);
                     const parent = currentText.parentElement;
-                    if (element.attributes[index].value.startsWith("{") && element.attributes[index].value.endsWith("}")) {
-                        let value = element.attributes[index].value;
+                    if (text[1].startsWith("{") && text[1].endsWith("}")) {
+                        let value = text[1];
                         value = value.replace("{", "");
                         value = value.replace("}", "");
                         const stateIndex = this.states.findIndex(item => item.key === value);
@@ -62,11 +76,12 @@ export default class Importer {
                         this.states[stateIndex].element.push(parent);
                         currentText.outerHTML = this.states[stateIndex].value;
                     } else {
-                        currentText.outerHTML = element.root.attributes[index].value;
+                        currentText.outerHTML = text[1];
                     }
-                }
+
+                });
             });
-            
+
             if (moduleScript) {
                 const newScript = document.createElement("script");
                 newScript.setAttribute("type", "module");
