@@ -1,4 +1,32 @@
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,300;0,400;0,500;0,700;0,800;1,400&display=swap');
+
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #2A232E;
+    }
+
+    h2 {
+        color: white;
+        font-size: 24px;
+        font-weight: 500;
+        font-family: "Poppins", sans-serif;
+        margin: 0px;
+        margin-bottom: 12px;
+    }
+
+    .box {
+        width: 414px;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        background-color: #312A34;
+        border-radius: 5px;
+        padding: 16px;
+    }
+
     .input {
         width: 100%;
         display: flex;
@@ -74,9 +102,36 @@
         margin-right: 4px;
         margin-top: 2px;
     }
+
+    @media all and (max-width: 500px) {
+        body {
+            background-color: #312A34;
+        }
+    }
 </style>
 
-<div class="input">
-    <label>label</label>
-    <input type="text">
-</div>
+<body>
+    <div class="box">
+        <h2>Register</h4>
+            <div class="input">
+                <label>username</label>
+                <input type="text">
+            </div>
+            <div class="input">
+                <label>email</label>
+                <input type="email">
+            </div>
+            <div class="input">
+                <label>password</label>
+                <input type="password">
+            </div>
+            <div class="input">
+                <label>re-password</label>
+                <input type="password">
+            </div>
+            <button>Register</button>
+            <div class="link">
+                <p>Alredy have an account?</p><a href="">Login</a>
+            </div>
+    </div>
+</body>

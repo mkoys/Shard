@@ -113,18 +113,18 @@
 <body>
     <div class="box">
         <h2>Login</h4>
-            <input-shard type="text" label="username or email"></input-shard>
-            <input-shard type="password" label="password">
+            <div class="input">
+                <label>username or email</label>
+                <input type="text">
+            </div>
+            <div class="input">
+                <label>password</label>
+                <input type="password">
                 <a href="">Forgot password?</a>
-            </input-shard>
+            </div>
             <button>Login</button>
             <div class="link">
                 <p>Need an account?</p><a href="">Register</a>
             </div>
     </div>
 </body>
-
-<script type="module">
-    import importer from "../core/importer.js";
-    importer("input", document);
-</script>

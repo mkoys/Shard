@@ -1,15 +1,10 @@
+import Importer from "./core/importer.js";
 
 
-fetch("./page/login.html").then(res => res.text().then(res => {
-    console.log(res)
-    const parser = new DOMParser();
+const main = () => {
+    const importer = new Importer(document);
 
-    const data = parser.parseFromString(res, "text/html");
+    importer.add("input")
+}
 
-    console.log(data.head.querySelector("style"));
-    const newStyle = document.createElement("style");
-    newStyle.innerHTML = data.head.querySelector("style").innerHTML
-    document.head.appendChild(newStyle)
-
-    document.body.innerHTML = data.body.innerHTML
-}))
+main();

@@ -1,40 +1,41 @@
-let importList = [];
-
-export default async function importer(module, globalDoc) {
-    importList.push(module);
-    const htmldata = await fetch(`../template/${module}.html`);
-
-    const textdata = await htmldata.text();
-
-    const parser = new DOMParser();
-
-    let data = parser.parseFromString(textdata, "text/html");
-        const allStuff = globalDoc.body.querySelectorAll(`${module}-shard`);
-        for (let y = 0; y < allStuff.length; y++) {
-            if (allStuff[y]) {
-                const allText = data.querySelectorAll("text");
-                for (let z = 0; z < allText.length; z++) {
-                    const currentText = data.querySelector(`text#${allText[z].id}`);
-
-                    const elm = data.querySelector("[set]");
-
-                    elm.attributes[elm.attributes["set"].value].value = allStuff[y].attributes[elm.attributes["set"].value].value;
-
-                    currentText.outerHTML = allStuff[y].attributes[allText[z].id].value;
-                }
-
-            }
-            if (data.querySelector("slot")) {
-                if (allStuff[y].children) {
-                    data.querySelector("slot").outerHTML = allStuff[y].innerHTML
-                }
-            }
-            allStuff[y].outerHTML = data.body.children[0].outerHTML;
-            data = parser.parseFromString(textdata, "text/html");
-
-        }
-
-        return data;
+export default class Importer {
+    constructor(doc) {
+        this.doc = doc;
+        this.modules = [];
     }
 
+    async add(module) {
+        this.modules.push(module)
+        const result = await fetch(`../template/${module}.html`);
+        const resultText = await result.text();
 
+        const domParser = new DOMParser();
+        const componentDoc = domParser.parseFromString(resultText, "text/html");
+
+        const componentStyle = componentDoc.head.querySelector("style");
+        const newStyle = document.createElement("style");
+
+        const compoenentElement = componentDoc.body.children[0];
+
+        const compoenentScript = componentDoc.querySelector("script");
+        const newScript = document.createElement("script");
+
+        const allComponentInstances = document.querySelectorAll(`shard-${module}`);
+
+        if (componentStyle) {
+            newStyle.innerHTML = componentStyle.innerHTML;
+            document.head.appendChild(newStyle);
+        }
+
+        for (let index = 0; index < allComponentInstances.length; index++) {
+           allComponentInstances[index].outerHTML = compoenentElement.outerHTML;
+        }
+
+
+        if (compoenentScript) {
+            newScript.innerHTML = compoenentScript.innerHTML;
+            newScript.setAttribute("type", "module");
+            document.head.appendChild(newScript);
+        }
+    }
+}
