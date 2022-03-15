@@ -1,10 +1,11 @@
 import Importer from "./core/importer.js";
 
+const importer = new Importer(document);
 
-const main = () => {
-    const importer = new Importer(document);
+importer.import("input");
 
-    importer.add("input")
-}
+const setTest = importer.state("test", Math.random());
 
-main();
+setInterval(() => {
+    setTest(Math.random());
+})
