@@ -27,52 +27,6 @@
         padding: 16px;
     }
 
-    .input {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 14px;
-    }
-
-    label {
-        text-transform: uppercase;
-        font-family: 'Poppins';
-        font-style: normal;
-        font-weight: 600;
-        font-size: 12px;
-        letter-spacing: 0.02em;
-        line-height: 154.5%;
-        color: rgba(255, 255, 255, 0.5);
-        margin-bottom: 2px;
-    }
-
-    input {
-        height: 42px;
-        outline: none;
-        border: 1px solid rgba(250, 0, 255, 0.75);
-        border-radius: 3px;
-        background-color: #353139;
-        font-family: 'Poppins';
-        font-style: normal;
-        font-weight: 400;
-        font-size: 18px;
-        line-height: 27px;
-        color: white;
-        padding: 10px;
-
-    }
-
-    a {
-        text-decoration: none;
-        color: rgb(250, 0, 255);
-        font-family: 'Poppins';
-        font-style: normal;
-        font-weight: 500;
-        font-size: 12px;
-        line-height: 18px;
-        margin-top: 2px;
-    }
-
     button {
         border: 0px;
         outline: none;
@@ -103,6 +57,17 @@
         margin-top: 2px;
     }
 
+    a {
+        text-decoration: none;
+        color: rgb(250, 0, 255);
+        font-family: 'Poppins';
+        font-style: normal;
+        font-weight: 500;
+        font-size: 12px;
+        line-height: 18px;
+        margin-top: 2px;
+    }
+
     @media all and (max-width: 500px) {
         body {
             background-color: #312A34;
@@ -114,11 +79,9 @@
     <div class="box">
         <h2>Login</h4>
             <shard-input input="text" text="label:username or email"></shard-input>
-            <div class="input">
-                <label>password</label>
-                <input type="password">
+            <shard-input input="text" text="label:password">
                 <a href="">Forgot password?</a>
-            </div>
+            </shard-input>
             <button>Login</button>
             <div class="link">
                 <p>Need an account?</p><a href="">Register</a>
@@ -127,9 +90,9 @@
 </body>
 
 <script>
-    import Importer from "../core/importer.js";
+    import importer from "../core/importer.js";
 
-    const importer = new Importer();
+    importer.setFolder("template");
 
-    importer.import("input");
+    importer.add("input");
 </script>
