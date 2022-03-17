@@ -1,3 +1,3 @@
-import Viewer from "./core/viewer.js";
+import viewer from "./core/viewer.js";
 
-Viewer.load("login")
+viewer.load("login", (path) => viewer.load(path))

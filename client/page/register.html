@@ -113,25 +113,21 @@
 <body>
     <div class="box">
         <h2>Register</h4>
-            <div class="input">
-                <label>username</label>
-                <input type="text">
-            </div>
-            <div class="input">
-                <label>email</label>
-                <input type="email">
-            </div>
-            <div class="input">
-                <label>password</label>
-                <input type="password">
-            </div>
-            <div class="input">
-                <label>re-password</label>
-                <input type="password">
-            </div>
+            <shard-input input="text" text="label:username"></shard-input>
+            <shard-input input="email" text="label:email"></shard-input>
+            <shard-input input="password" text="label:password"></shard-input>
+            <shard-input input="password" text="label:re-password"></shard-input>
             <button>Register</button>
             <div class="link">
-                <p>Alredy have an account?</p><a href="">Login</a>
+                <p>Alredy have an account?</p><a route="login">Login</a>
             </div>
     </div>
 </body>
+
+<script>
+    import importer from "../core/importer.js";
+
+    importer.setFolder("template");
+
+    importer.add("input");
+</script>

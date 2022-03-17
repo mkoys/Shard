@@ -30,6 +30,18 @@ class customComponenet extends HTMLElement {
 
 
         this.shadowRoot.querySelector("slot").outerHTML = this.innerHTML;
+
+        this.definedSettable = this.shadowRoot.querySelectorAll("[set]");
+
+        this.definedSettable.forEach(item => {
+            const toSet = item.getAttribute("set");
+
+            toSet.split(",").forEach(itemInner => {
+                const values = itemInner.split(":");
+
+                item.setAttribute(values[0], this.getAttribute(values[1]));
+            });
+        });
     }
 }
 
@@ -52,7 +64,11 @@ async function add(module) {
 
     component = { moduleScript, moduleBody, moduleStyle };
 
-    customElements.define(`shard-${module}`, customComponenet);
+    try {
+        customElements.define(`shard-${module}`, customComponenet);   
+    } catch (error) {
+        
+    }
 }
 
 export default { add, setFolder };
