@@ -58,6 +58,7 @@
     }
 
     a {
+        cursor: pointer;
         text-decoration: none;
         color: rgb(250, 0, 255);
         font-family: 'Poppins';
@@ -78,10 +79,8 @@
 <body>
     <div class="box">
         <h2>Login</h2>
-        <shard-input input="text" text="label:username or email"></shard-input>
-        <shard-input input="password" text="label:password">
-            <a href="">Forgot password?</a>
-        </shard-input>
+        <shard-input text="label:Username or Email"></shard-input>
+        <shard-input text="label:Password"></shard-input>
         <button>Login</button>
         <div class="link">
             <p>Need an account?</p><a route="register">Register</a>
@@ -90,9 +89,9 @@
 </body>
 
 <script>
-    import importer from "../core/importer.js";
+    import Importer from "../core/importer.js";
 
-    importer.setFolder("template");
+    const importer = new Importer(document);
 
     importer.add("input");
 </script>

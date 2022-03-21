@@ -1,74 +1,108 @@
-let component, folder;
-
-class customComponenet extends HTMLElement {
-    constructor() {
-
-        super();
+export default class Importer {
+    constructor(document) {
+        this.document = document
         this.states = [];
+        this.modules = [];
+        this.render(document)
+    }
 
-        this.attachShadow({ mode: 'open' });
+    render(document) {
+        const allText = document.querySelectorAll("[text]");
 
-        let moduleStyle = document.createElement("style");
-        let moduleBody = document.createElement("div");
+        allText.forEach(element => {
+            if (!element.localName.startsWith("shard")) {
+                let textValue = element.getAttribute("text");
+                if (!textValue.startsWith("{")) {
+                    element.removeAttribute("text");
+                    const valueIndex = this.states.findIndex(item => item.key === element.getAttribute("text"));
+                    if (valueIndex > -1) {
+                        element.textContent = this.states[valueIndex].value;
+                    }
+                } else {
+                    textValue = textValue.replace("{", "");
+                    textValue = textValue.replace("}", "");
+                    textValue = element.setAttribute("text", textValue);
+                }
+            }
+        });
+    }
 
-        moduleStyle.innerHTML = component.moduleStyle.innerHTML;
-        moduleBody.setAttribute("class", component.moduleBody.getAttribute("class"))
-        moduleBody.innerHTML = component.moduleBody.innerHTML;
-
-        this.shadowRoot.append(moduleStyle, moduleBody);
-
-        this.definedText = this.getAttribute("text");
-
-
-        this.definedText.split(",").forEach(item => {
-            const values = item.split(":");
-
-            const textElement = this.shadowRoot.querySelector(`text#${values[0]}`);
-
-            textElement.outerHTML = values[1];
+    state(name, value, document) {
+        this.states.push({
+            key: name,
+            value: value
         });
 
+        this.render(document)
 
-        this.shadowRoot.querySelector("slot").outerHTML = this.innerHTML;
+        return (newValue) => {
+            const index = this.states.findIndex(item => item.key === name);
 
-        this.definedSettable = this.shadowRoot.querySelectorAll("[set]");
+            this.states[index].value = newValue;
 
-        this.definedSettable.forEach(item => {
-            const toSet = item.getAttribute("set");
+            this.render(document)
+        }
+    }
 
-            toSet.split(",").forEach(itemInner => {
-                const values = itemInner.split(":");
+    async add(module) {
+        this.modules.push(module);
 
-                item.setAttribute(values[0], this.getAttribute(values[1]));
+        const result = await fetch(`/template/${module}.html`);
+
+        const textDom = await result.text();
+
+        const parser = new DOMParser();
+
+        const dom = parser.parseFromString(textDom, "text/html");
+
+        const moduleStyle = dom.head.querySelector("style");
+        const moduleHtml = dom.body.children[0];
+        const moduleScript = dom.querySelector("script");
+
+        const allModuleElements = document.querySelectorAll(`shard-${module}`)
+
+        const splitScript = moduleScript.innerHTML.split("\n");
+
+        let lineIndex = splitScript.findIndex(item => {
+            item.indexOf("import");
+
+            return item;
+        })
+
+        delete splitScript[lineIndex];
+
+        let modifiedScript = splitScript.join("\n");
+
+        modifiedScript = modifiedScript.replace(/document/, "moduleHtml");
+
+        eval(modifiedScript);
+
+        document.head.appendChild(moduleStyle);
+
+        allModuleElements.forEach(element => {
+            const cloneHtml = moduleHtml.cloneNode(true);
+
+            const allText = cloneHtml.querySelectorAll("[text]");
+
+            const textList = element.getAttribute("text");
+
+            const textArray = textList.split(",");
+
+            textArray.forEach((item, index) => textArray[index] = item.split(":"));
+
+            allText.forEach(element => {
+                let textValue = element.getAttribute("text");
+
+                const index = textArray.findIndex(item => item[0] === textValue);
+
+                element.removeAttribute("text");
+
+                element.textContent = textArray[index][1];
             });
-        });
+
+            element.appendChild(cloneHtml)
+        })
+
+
     }
 }
-
-function setFolder(newfolder) {
-    folder = newfolder;
-}
-
-async function add(module) {
-    const result = await fetch(`./${folder}/${module}.html`);
-
-    const textResult = await result.text();
-
-    const domParser = new DOMParser();
-
-    const moduleDocument = domParser.parseFromString(textResult, "text/html");
-
-    const moduleStyle = moduleDocument.querySelector("style");
-    const moduleBody = moduleDocument.body.children[0];
-    const moduleScript = moduleDocument.querySelector("script");
-
-    component = { moduleScript, moduleBody, moduleStyle };
-
-    try {
-        customElements.define(`shard-${module}`, customComponenet);   
-    } catch (error) {
-        
-    }
-}
-
-export default { add, setFolder };

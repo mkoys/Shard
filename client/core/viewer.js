@@ -21,7 +21,7 @@ async function load(page) {
         newScript.setAttribute("type", "module");
         newScript.setAttribute("module", "");
         newScript.innerHTML = doc.querySelector("script").innerHTML;
-        document.head.appendChild(newScript);
+        document.body.appendChild(newScript);
     }
 
     primeRoutes();

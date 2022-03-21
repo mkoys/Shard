@@ -1,4 +1,6 @@
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,300;0,400;0,500;0,700;0,800;1,400&display=swap');
+
     * {
         padding: 0px;
         margin: 0px;
@@ -41,6 +43,7 @@
     }
 
     a {
+        cursor: pointer;
         text-decoration: none;
         color: rgb(250, 0, 255);
         font-family: 'Poppins';
@@ -53,7 +56,12 @@
 </style>
 
 <div class="input">
-    <label><text id="label"></text></label>
-    <input set="type:input" type="text">
-    <slot class="under-slot" name="under-text"></slot>
+    <label text="{label}"></label>
+    <input type="text">
 </div>
+
+<script type="module">
+    import Importer from "../core/importer.js";
+
+    const importer = new Importer(document);
+</script>
