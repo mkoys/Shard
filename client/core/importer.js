@@ -7,16 +7,17 @@ export default class Importer {
     }
 
     render(document) {
+
         const allText = document.querySelectorAll("[text]");
 
         allText.forEach(element => {
             if (!element.localName.startsWith("shard")) {
                 let textValue = element.getAttribute("text");
                 if (!textValue.startsWith("{")) {
-                    element.removeAttribute("text");
                     const valueIndex = this.states.findIndex(item => item.key === element.getAttribute("text"));
                     if (valueIndex > -1) {
                         element.textContent = this.states[valueIndex].value;
+                        element.removeAttribute("text");
                     }
                 } else {
                     textValue = textValue.replace("{", "");
@@ -73,7 +74,7 @@ export default class Importer {
 
         let modifiedScript = splitScript.join("\n");
 
-        modifiedScript = modifiedScript.replace(/document/, "moduleHtml");
+        modifiedScript = modifiedScript.replace(/document/g, "moduleHtml");
 
         eval(modifiedScript);
 

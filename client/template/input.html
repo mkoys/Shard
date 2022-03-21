@@ -56,7 +56,7 @@
 </style>
 
 <div class="input">
-    <label text="{label}"></label>
+    <label text="label"></label>
     <input type="text">
 </div>
 
@@ -64,4 +64,8 @@
     import Importer from "../core/importer.js";
 
     const importer = new Importer(document);
+
+    let x = 0;
+
+    const setLabel = importer.state("label", x, document)
 </script>
